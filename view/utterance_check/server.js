@@ -3,8 +3,16 @@ const axios = require('axios');
 const app = express();
 const path = require('path');
 
+// CORSミドルウェアを追加
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    next();
+});
+
 // APIキーの設定 (ひらがな化API)
-const API_KEY = '7dd726c3e3bd92948d538e80c0773656d7b89328b3eb400a11e893efe91f7a12';  // ここにAPIキーを記載してください
+const API_KEY = '7dd726c3e3bd92948d538e80c0773656d7b89328b3eb400a11e893efe91f7a12';
 
 // JSONリクエストのためのミドルウェア
 app.use(express.json());
@@ -76,7 +84,8 @@ app.post('/hiragana', async (req, res) => {
     const text = req.body.text;
 
     try {
-        const response = await axios.post('https://speechtraininggame.github.io/minigame/view/utterance_check/public/A.html', {
+        // ひらがな化APIを呼び出す
+        const response = await axios.post('https://labs.goo.ne.jp/api/hiragana', {
             app_id: API_KEY,
             sentence: text,
             output_type: 'hiragana'
@@ -85,10 +94,13 @@ app.post('/hiragana', async (req, res) => {
         const hiragana = response.data.converted;
         const phonemes = hiraganaToPhonemes(hiragana);
 
-        res.json({ converted: hiragana, phonemes: phonemes });
+        res.json({ 
+            converted: hiragana,  // ひらがな化されたテキスト
+            phonemes: phonemes 
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).send('エラーが発生しました');
+        console.error('Error:', error);
+        res.status(500).json({ error: 'エラーが発生しました' });
     }
 });
 
@@ -98,7 +110,7 @@ app.get('/', (req, res) => {
 });
 
 // サーバー起動
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
