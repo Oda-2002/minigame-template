@@ -11,6 +11,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm install
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -20,6 +26,7 @@ jobs:
           pip install Flask Flask-Freeze
       - name: Build static files
         run: python freeze.py
+        run: npm run build
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
