@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const transcript = event.results[0][0].transcript;
 
         // サーバーにリクエストを送信して、ひらがなと音素に変換
-        fetch('https://speechtraininggame.github.io/minigame/view/utterance_check/public/A.html', {
+        fetch('https://speechtraininggame-ntut.github.io/minigame-template/view/utterance_check/public/A.html', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
