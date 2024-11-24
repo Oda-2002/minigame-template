@@ -1,7 +1,3 @@
-// APIエンドポイントとキー（gooラボのAPIキーが必要）
-const API_URL = 'https://labs.goo.ne.jp/api/hiragana';
-const API_KEY = '7dd726c3e3bd92948d538e80c0773656d7b89328b3eb400a11e893efe91f7a12';
-
 // 音声認識設定
 let timeLimit;
 let targetCorrect = 0;
@@ -29,7 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const timerDisplay = document.getElementById("timerDisplay");
     const textLog = document.getElementById("textLog");
     const resultElement = document.getElementById("result");
-    const phonemeElement = document.getElementById("phoneme");
 
     const startButton = document.getElementById('start-button');
 
@@ -83,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const transcript = event.results[0][0].transcript;
 
         // サーバーにリクエストを送信して、ひらがなと音素に変換
-        fetch('https://speechtraininggame-ntut.github.io/minigame-template/public/js/script.js', {
+        fetch('/hiragana', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -92,8 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(data => {
-            resultElement.textContent = `ひらがな変換結果: ${data.converted}`;
-            phonemeElement.textContent = `音素: /${data.phonemes}/`;
+            resultElement.textContent = `ひらがな変換結果: ${data.converted} 音素: /${data.phonemes}/`;
 
             // 判定処理
             if (data.converted === wordDisplay.textContent) {
@@ -112,7 +106,6 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // 音声認識結果をクリア
             textLog.textContent = '';
-            phonemeElement.textContent = '';
             
             isRecognitionActive = false; // 音声認識が終了したことを示す
         })
@@ -157,6 +150,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function endGame() {
         gameIsOver = true;
         recognition.stop(); // 音声認識を停止
-        window.location.href = `A_play_end.html?correct=${correctAnswers}&mistakes=${mistakes}&correctWords=${correctWordsArray.join("，")}&mistakeWords=${mistakeWordsArray.join("，")}&targetCorrect=${targetCorrect}&unclearWords=${encodeURIComponent(unclearWordsArray.join(','))}`;
+        const url = new URL('/play-end', window.location.origin);
+        url.searchParams.append('correct', correctAnswers);
+        url.searchParams.append('mistakes', mistakes);
+        url.searchParams.append('correctWords', correctWordsArray.join("、"));
+        url.searchParams.append('mistakeWords', mistakeWordsArray.join("、"));
+        url.searchParams.append('targetCorrect', targetCorrect);
+        window.location.href = url.toString();
     }
 });
