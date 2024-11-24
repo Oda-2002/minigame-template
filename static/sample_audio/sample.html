@@ -20,8 +20,9 @@
     .content label {
       margin-bottom: 10px;
     }
-    input[type="number"],
-    input[type="text"] {
+    .content input[type="number"],
+    .content input[type="text"],
+    .content select {
       width: 100%;
       max-width: 300px;
       margin: 0 auto;
@@ -51,8 +52,7 @@
   <div class="content">
     <label for="voice">声のタイプ</label>
     <select id="voice" class="form-select">
-      <option value="Microsoft Ayumi - Japanese (Japan)">女性の声</option>
-      <option value="Microsoft Ichiro - Japanese (Japan)">男性の声</option>
+      <!-- 音声リストはJavaScriptで動的に追加されます -->
     </select>
   </div>
   
@@ -74,6 +74,37 @@
   
   <script>
     const btn = document.getElementById("btn");
+    const voiceSelect = document.getElementById("voice");
+
+    // 音声リストの取得
+    function populateVoiceList() {
+      const voices = window.speechSynthesis.getVoices();
+      voiceSelect.innerHTML = '';
+
+      // Mac用の音声リスト
+      const macVoices = [
+        { name: "Kyoko", description: "女性: Kyoko (日本語)" },
+        { name: "Hattori", description: "男性: Hattori (日本語)" },
+      ];
+
+      // Windows用の音声リスト
+      const windowsVoices = [
+        { name: "Microsoft Ichiro", description: "男性: Microsoft Ichiro (日本語)" },
+        { name: "Microsoft Ichiro", description: "女性: Microsoft Ichiro (日本語)" },
+      ];
+
+      // 適切な音声リストを選択
+      const isMac = navigator.userAgent.includes("Mac");
+      const targetVoices = isMac ? macVoices : windowsVoices;
+
+      targetVoices.forEach(({ name, description }) => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = description;
+        voiceSelect.appendChild(option);
+      });
+    }
+
     btn.addEventListener("click", () => {
       const synth = new SpeechSynthesisUtterance();
       const txt = document.getElementById("txt");
@@ -82,13 +113,9 @@
       const rateInput = document.getElementById("rate");
       synth.rate = parseFloat(rateInput.value) || 1.0;
 
-      const voiceSelect = document.getElementById("voice").value;
-
-      const voices = window.speechSynthesis.getVoices().filter(voice =>
-       voice.name === "Microsoft Ayumi - Japanese (Japan)" || 
-       voice.name === "Microsoft Ichiro - Japanese (Japan)"
-      );
-      const selectedVoice = voices.find(voice => voice.name === voiceSelect);
+      const selectedVoiceName = voiceSelect.value;
+      const voices = window.speechSynthesis.getVoices();
+      const selectedVoice = voices.find(voice => voice.name === selectedVoiceName);
 
       if (selectedVoice) {
         synth.voice = selectedVoice;
@@ -96,8 +123,8 @@
 
       window.speechSynthesis.speak(synth);
     });
-  </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    window.speechSynthesis.onvoiceschanged = populateVoiceList;
+  </script>
 </body>
 </html>
