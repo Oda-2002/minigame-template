@@ -28,48 +28,61 @@
       margin: 0 auto;
       text-align: center;
     }
-    a {
-      display: block;
-      text-align: center;
-      margin-top: 10px;
+    .button-group {
+      display: flex;
+      justify-content: center; /* 中央揃え */
+      gap: 10px; /* ボタン間のスペース */
     }
-    .btn-back {
-      display: inline-block;
-      margin-top: 20px;
-      text-align: center;
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+        transition: background-color 0.3s;
+    }
+    .btn-primary:hover, .btn-primary:active {
+        background-color: #0056b3 !important; /* 濃い青 */
+        border-color: #0056b3 !important;
+        color: white !important;
+    }
+    .btn-try {
+        background-color: #28a745; /* 緑色の背景 */
+        color: white;
+        transition: background-color 0.3s;
+    }
+    .btn-try:hover, .btn-try:active {
+        background-color: #218838 !important; /* 濃い緑 */
+        color: white !important;
     }
   </style>
 </head>
 <body class="container">
-  <h2 class="text-center mt-4">テキストを入力するとブラウザがしゃべります</h2>
-  <p class="text-center">以下の項目で、必要に応じて変更することができます。<br>音声合成を開始したい場合は、「読み上げる」を押してください。<br>ブラウザが単語を読み間違えることがあるので、その際は片仮名で聴きたい言葉を入力してください。<br>薄い灰色で書かれているのは入力の例です。</p>
-  
-  <div class="content">
-    <label for="rate">速さ(0.1 - 2.0, デフォルト：1.0)</label>
-    <input id="rate" type="number" class="form-control" step="0.1" min="0.1" max="2.0">
-  </div>
-  
-  <div class="content">
-    <label for="voice">声のタイプ</label>
-    <select id="voice" class="form-select">
-      <!-- 音声リストはJavaScriptで動的に追加されます -->
-    </select>
-  </div>
-  
-  <div class="content">
-    <label for="txt">聴きたい言葉</label>
-    <input id="txt" type="text" class="form-control" placeholder="生麦生米生卵">
-  </div>
-  
-  <div class="content">
-    <button id="btn" class="btn btn-primary">読み上げる</button>
-  </div>
-  
-  <a href='example.html' class="btn btn-outline-primary">ひらがな50音（例）</a>
-  <a href='../../index.html' class="btn btn-outline-secondary">トップ画面へ</a> 
-  
-  <div class="btn-back">
-    <a href="javascript:history.back()" class="btn btn-outline-info"><i class="fas fa-arrow-left"></i> 戻る</a>
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <h2 class="text-center mt-4">テキストを入力するとブラウザがしゃべります</h2>
+      <p class="text-center">以下の項目で、必要に応じて変更することができます。<br>音声合成を開始したい場合は、「読み上げる」を押してください。<br>ブラウザが単語を読み間違えることがあるので、その際は片仮名で聴きたい言葉を入力してください。<br>薄い灰色で書かれているのは入力の例です。</p>
+      
+      <div class="content">
+        <label for="rate">速さ(0.1 - 2.0, デフォルト：1.0)</label>
+        <input id="rate" type="number" class="form-control" step="0.1" min="0.1" max="2.0">
+      </div>
+      
+      <div class="content">
+        <label for="voice">声のタイプ</label>
+        <select id="voice" class="form-select">
+          <!-- 音声リストはJavaScriptで動的に追加されます -->
+        </select>
+      </div>
+      
+      <div class="content">
+        <label for="txt">聴きたい言葉</label>
+        <input id="txt" type="text" class="form-control" placeholder="生麦生米生卵">
+      </div>
+      
+      <div class="button-group">
+        <a href="{{ url_for('utterance_check') }}" id = "btn" class="btn btn-try">再挑戦</a>
+        <a href="{{ url_for('index') }}" class="btn btn-primary">トップ画面へ</a>
+      </div>
+    </div>
   </div>
   
   <script>
@@ -89,8 +102,8 @@
 
       // Windows用の音声リスト
       const windowsVoices = [
-        { name: "Microsoft Ichiro", description: "男性: Microsoft Ichiro (日本語)" },
-        { name: "Microsoft Ichiro", description: "女性: Microsoft Ichiro (日本語)" },
+        { name: "Microsoft Ichiro - Japanese (Japan)", description: "男性: Microsoft Ichiro (日本語)" },
+        { name: "Microsoft Ayumi - Japanese (Japan)", description: "女性: Microsoft Ayumi (日本語)" }
       ];
 
       // 適切な音声リストを選択
