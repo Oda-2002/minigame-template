@@ -11,9 +11,5 @@ COPY . .
 # 必要なPythonパッケージをインストール
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Flaskアプリケーションを環境変数で設定
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-
-# Flaskアプリを起動
-CMD ["flask", "run"]
+# アプリケーションを実行
+CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:8080", "app:app"]
