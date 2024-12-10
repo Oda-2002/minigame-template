@@ -1,10 +1,8 @@
-from flask import Flask, send_from_directory
+from flask import Blueprint, render_template
 
-app = Flask(__name__)
+# Blueprintの作成
+sample_audio_bp = Blueprint('sample_audio', __name__, template_folder='../templates')
 
-@app.route('/')
+@sample_audio_bp.route('/')
 def index():
-    return send_from_directory('../static/sample_audio', 'sample.html')
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    return render_template('sample.html')

@@ -30,28 +30,23 @@
         <h1 class="text-center mb-4">発話訓練 ミニゲーム</h1>
         <div class="row row-cols-1 row-cols-md-2 g-4"> <!-- 1行に2つのゲームを表示 -->
             <div class="col">
-                <a href="{{ url_for('utterance_check.utterance_check') }}" class="btn btn-custom w-100 h-100 d-flex align-items-center justify-content-center">
+                <a href="{{ url_for('utterance_check.index') }}" class="btn btn-custom w-100 h-100 d-flex align-items-center justify-content-center">
                     発話チェック
                 </a>
             </div>
             <div class="col">
-                <a href="{{ url_for('sustainability_of_voice.sustainability_of_voice') }}" class="btn btn-custom w-100 h-100 d-flex align-items-center justify-content-center">
+                <a href="{{ url_for('sustainability_of_voice.index') }}" class="btn btn-custom w-100 h-100 d-flex align-items-center justify-content-center">
                     声の持続力 チャレンジ
                 </a>
             </div>
             <div class="col">
-                <a href="{{ url_for('sample_audio.sample_audio') }}" class="btn btn-custom w-100 h-100 d-flex align-items-center justify-content-center">
+                <a href="{{ url_for('sample_audio.index') }}" class="btn btn-custom w-100 h-100 d-flex align-items-center justify-content-center">
                     サンプル音声
                 </a>
             </div>
             <div class="col">
-                <a href="{{ url_for('voice_jump.voice_jump') }}" class="btn btn-custom w-100 h-100 d-flex align-items-center justify-content-center">
+                <a href="{{ url_for('voice_jump.index') }}" class="btn btn-custom w-100 h-100 d-flex align-items-center justify-content-center">
                     ラン&ジャンプ
-                </a>
-            </div>
-            <div class="col">
-                <a href="" class="btn btn-custom w-100 h-100 d-flex align-items-center justify-content-center">
-                    疑問文か平叙文か(制作中)
                 </a>
             </div>
         </div>
