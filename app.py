@@ -8,6 +8,7 @@ from views.utterance_check import utterance_check_bp
 from views.voice_jump import voice_jump_bp
 import requests
 from flask_cors import CORS
+import os
 
 load_dotenv()  # .envファイルを読み込む
 
@@ -46,5 +47,5 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    # Flask アプリ全体を Socket.IO サーバーとして動作させる
+    port = int(os.environ.get("PORT", 8080))
     socketio.run(app, host='0.0.0.0', port=8080, debug=True)
