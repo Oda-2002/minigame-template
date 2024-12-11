@@ -15,7 +15,8 @@ load_dotenv()  # .envファイルを読み込む
 app = Flask(__name__)
 socketio = SocketIO(
     app, 
-    cors_allowed_origins=os.getenv("CORS_ALLOWED_ORIGINS", "*")
+    cors_allowed_origins=os.getenv("CORS_ALLOWED_ORIGINS", "*"),
+    async_mode='eventlet'  # WebSocket サポートのために eventlet を使用
 )
 
 # アプリの初期化部分に追加
