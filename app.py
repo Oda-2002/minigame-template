@@ -8,15 +8,23 @@ from views.voice_jump import voice_jump_bp
 import requests
 from flask_cors import CORS
 import os
+import eventlet  # 必須: eventlet をインポート
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 load_dotenv()  # .envファイルを読み込む
 
 # Flask アプリと Socket.IO の初期化
 app = Flask(__name__)
+
+# リバースプロキシ対応を追加
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
 socketio = SocketIO(
     app, 
-    cors_allowed_origins=os.getenv("CORS_ALLOWED_ORIGINS", "*"),
-    async_mode='eventlet'  # WebSocket サポートのために eventlet を使用
+    cors_allowed_origins="*",  # "*" を指定して全てのオリジンを許可（一時的に）
+    async_mode='eventlet', # WebSocket サポートのために eventlet を使用
+    logger=True, # ログを有効化
+    engineio_logger=True # Engine.IO のログを有効化
 )
 
 # アプリの初期化部分に追加

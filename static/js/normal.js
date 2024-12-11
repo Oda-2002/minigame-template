@@ -1,4 +1,7 @@
-var socket = io.connect('wss://minigame-template-571979192050.asia-northeast1.run.app');
+var socket = io.connect('wss://minigame-template-571979192050.asia-northeast1.run.app', {
+  transports: ['websocket', 'polling'],  // WebSocket と polling を明示的に指定
+  upgrade: true                          // WebSocket にアップグレードを許可
+});
 var threshold = 0;
 var timer;
 var elapsedTime = 0;

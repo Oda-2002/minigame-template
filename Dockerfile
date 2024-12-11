@@ -14,8 +14,11 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Flask-SocketIO 用の非同期ライブラリ
+RUN pip install eventlet
+
 # アプリケーションのコードをコピー
 COPY . .
 
 # アプリケーションを起動
-CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:8080", "app:app"]
+CMD ["gunicorn", "-w", "2", "-k", "eventlet", "-b", "0.0.0.0:8080", "app:app"]
