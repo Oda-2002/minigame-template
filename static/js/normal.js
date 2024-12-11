@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:8080');
+var socket = io.connect('was://minigame-template-571979192050.asia-northeast1.run.app');
 var threshold = 0;
 var timer;
 var elapsedTime = 0;

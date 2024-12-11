@@ -14,7 +14,7 @@ load_dotenv()  # .envファイルを読み込む
 
 # Flask アプリと Socket.IO の初期化
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="https://minigame-template-571979192050.asia-northeast1.run.app")
 
 # アプリの初期化部分に追加
 CORS(app)
