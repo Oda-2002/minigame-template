@@ -1,4 +1,4 @@
-var socket = io.connect('was://minigame-template-571979192050.asia-northeast1.run.app');
+var socket = io.connect('wss://minigame-template-571979192050.asia-northeast1.run.app');
 var threshold = 0;
 var timer;
 var elapsedTime = 0;
