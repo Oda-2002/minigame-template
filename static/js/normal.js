@@ -9,28 +9,38 @@ var isDetecting = false;
 var isDetecting = false;
 var hasExceededThreshold = false;
 
-socket.on('connect', function() {
-  console.log('Connected to server');
-  socket.emit('start_monitoring');
-});
+// 音声入力を取得してサーバーに送信
+navigator.mediaDevices.getUserMedia({ audio: true })
+  .then(function(stream) {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const source = audioContext.createMediaStreamSource(stream);
+    const processor = audioContext.createScriptProcessor(1024, 1, 1);
 
+    source.connect(processor);
+    processor.connect(audioContext.destination);
+
+    processor.onaudioprocess = function(event) {
+      const input = event.inputBuffer.getChannelData(0);
+      const rms = Math.sqrt(input.reduce((sum, value) => sum + value * value, 0) / input.length);
+      // dB値を計算し、正の値に変換（基準値を調整）
+      const dB = 20 * Math.log10(rms) + 100; // +100 を加えて正の値にシフト
+
+      // 値が0未満の場合は0にする
+      const normalizedDB = Math.max(0, dB);
+      
+      // サーバーに音声データを送信
+      socket.emit('audio_data', { power: normalizedDB });
+    };
+  })
+  .catch(function(err) {
+    console.error('マイクへのアクセスに失敗しました:', err);
+  });
+
+// サーバーからのデータを受信
 socket.on('audio_data', function(data) {
-  if (!isDetecting) return; // 開始ボタンが押されるまで動作しない
-
   console.log('Received audio data:', data);
   var dB = data.power;
   document.getElementById('volume').style.width = (dB / 100 * 100) + '%';
-  console.log('dB: ' + dB);
-
-  if (threshold > 0 && dB > threshold) {
-    if (!hasExceededThreshold) {
-      hasExceededThreshold = true; // しきい値を初めて超えた
-      startTimer();
-    }
-  } else if (hasExceededThreshold && dB < threshold) {
-    stopTimer();
-    isDetecting = false; // カウントを再開しない
-  }
 });
 
 socket.on('disconnect', function() {
